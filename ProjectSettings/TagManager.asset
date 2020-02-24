@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Brick
   - CoinBlock
+  - Spike
+  - Goal
   layers:
   - Default
   - TransparentFX

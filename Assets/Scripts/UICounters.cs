@@ -6,9 +6,12 @@ using TMPro;
 
 public class UICounters : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI scoreText;
-    [SerializeField] TextMeshProUGUI coinText;
-    [SerializeField] TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private GameObject GameManager;
+    [SerializeField] private int timeStart;
+    public bool gameIsRunning = true;
     private int score, coin, time;
     static float timer;
 
@@ -21,13 +24,19 @@ public class UICounters : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
+        if (gameIsRunning)
+            timer += Time.deltaTime;
         TimeSpan timeSpan = TimeSpan.FromSeconds(timer);
-        time = 400 - timeSpan.Seconds;
+        time = timeStart - (timeSpan.Seconds + timeSpan.Minutes * 60);
 
         scoreText.text = "MARIO\n" + score.ToString("000000");
         coinText.text = "COINS: " + coin.ToString("00");
         timeText.text = "TIME\n" + time.ToString("000");
+
+        if (time <= 0 && gameIsRunning) {
+            GameManager.GetComponent<GameManager>().gameOver(false);
+            gameIsRunning = false;
+        }
     }
 
     public void addScore(int amount) {
@@ -36,5 +45,9 @@ public class UICounters : MonoBehaviour
 
     public void addCoin(int amount) {
         coin += amount;
+    }
+
+    public void endGame() {
+        gameIsRunning = false;
     }
 }
